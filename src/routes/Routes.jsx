@@ -6,6 +6,7 @@ import ErrorElement from '../pages/ErrorElement';
 import AuthLayout from '../layouts/AuthLayout';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
+import PrivetRoute from './PrivetRoute';
 
 const routes = createBrowserRouter([
     {
@@ -15,7 +16,11 @@ const routes = createBrowserRouter([
         children: [
             {
                 path: '/',
-                element: <Home />
+                element: (
+                    <PrivetRoute>
+                        <Home />
+                    </PrivetRoute>
+                )
             },
             {
                 path: '/auth',
@@ -28,7 +33,7 @@ const routes = createBrowserRouter([
                     {
                         path: '/auth/register',
                         element: <Register />
-                    },
+                    }
                 ]
             }
         ]
