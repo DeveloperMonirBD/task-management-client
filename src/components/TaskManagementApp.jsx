@@ -83,6 +83,16 @@ const TaskManagementApp = () => {
         }
     };
 
+    const handleDeleteTask = async id => {
+        try {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${id}`);
+            const updatedTasks = tasks.filter(task => task._id !== id);
+            setTasks(updatedTasks);
+        } catch (error) {
+            console.error('Error deleting task:', error);
+        }
+    };
+
     
 
     return (
