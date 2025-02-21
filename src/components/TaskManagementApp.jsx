@@ -14,7 +14,6 @@ const TaskManagementApp = () => {
 
     const fetchTasks = async () => {
         try {
-
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/tasks`);
             console.log('Fetched tasks:', response.data); // Debugging
             const data = Array.isArray(response.data) ? response.data : []; // Ensure data is an array
@@ -74,7 +73,6 @@ const TaskManagementApp = () => {
 
     const handleUpdateTask = async (id, updatedTask) => {
         try {
-
             await axios.patch(`${import.meta.env.VITE_API_URL}/tasks/${id}`, updatedTask);
             const updatedTasks = tasks.map(task => (task._id === id ? { ...task, ...updatedTask } : task));
             setTasks(updatedTasks);
@@ -105,13 +103,32 @@ const TaskManagementApp = () => {
         }
     };
 
-    
+    const handleReorder = async (taskId, newIndex, category) => {
+        const categoryTasks = tasks.filter(t => t.Category === category);
+        const task = categoryTasks.find(t => t._id === taskId);
+
+        if (!task) return; // Task not found
+
+        categoryTasks.splice(categoryTasks.indexOf(task), 1);
+        categoryTasks.splice(newIndex, 0, task);
+
+        const reorderedTasks = categoryTasks.map((t, index) => ({
+            ...t,
+            order: index
+        }));
+
+        try {
+            await Promise.all(reorderedTasks.map(t => axios.patch(`${import.meta.env.VITE_API_URL}/tasks/${t._id}`, { order: t.order })));
+            setTasks(prevTasks => prevTasks.map(t => (t.Category === category ? reorderedTasks.find(rt => rt._id === t._id) || t : t)));
+        } catch (error) {
+            console.error('Error reordering tasks:', error);
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-100 p-4">
             <h1 className="text-3xl font-bold text-center mb-8">Task Management</h1>
             <div className="max-w-4xl mx-auto">
-
                 {/* Add Task Form */}
                 <form onSubmit={handleAddTask} className="bg-white p-4 rounded-lg shadow mb-8">
                     <input
@@ -148,7 +165,8 @@ const TaskManagementApp = () => {
                             {Array.isArray(tasks) &&
                                 tasks
                                     .filter(task => task.Category === category)
-                                    .map(task => (
+                                    .sort((a, b) => a.order - b.order)
+                                    .map((task, index) => (
                                         <div key={task._id} draggable onDragStart={e => handleDragStart(e, task._id)} className="p-4 mb-4 border rounded-lg bg-gray-50">
                                             <h3 className="font-bold">{task.Title}</h3>
                                             <p className="text-sm text-gray-600">{task.Description}</p>
@@ -165,6 +183,14 @@ const TaskManagementApp = () => {
                                                 </button>
                                                 <button onClick={() => handleDeleteTask(task._id)} className="text-sm text-red-500 hover:text-red-700">
                                                     Delete
+                                                </button>
+                                                
+                                                {/* re-order btn */}
+                                                <button onClick={() => handleReorder(task._id, index - 1, category)} disabled={index === 0}>
+                                                    ⬆
+                                                </button>
+                                                <button onClick={() => handleReorder(task._id, index + 1, category)} disabled={index === tasks.filter(t => t.Category === category).length - 1}>
+                                                    ⬇
                                                 </button>
                                             </div>
                                         </div>
