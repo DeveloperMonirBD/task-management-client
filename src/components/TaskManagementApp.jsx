@@ -93,12 +93,25 @@ const TaskManagementApp = () => {
         }
     };
 
+    const handleDragStart = (e, taskId) => {
+        e.dataTransfer.setData('taskId', taskId);
+    };
+
+    const handleDrop = async (e, targetCategory) => {
+        const taskId = e.dataTransfer.getData('taskId');
+        const task = tasks.find(t => t._id === taskId);
+        if (task.Category !== targetCategory) {
+            await handleUpdateTask(taskId, { Category: targetCategory });
+        }
+    };
+
     
 
     return (
         <div className="min-h-screen bg-gray-100 p-4">
             <h1 className="text-3xl font-bold text-center mb-8">Task Management</h1>
             <div className="max-w-4xl mx-auto">
+
                 {/* Add Task Form */}
                 <form onSubmit={handleAddTask} className="bg-white p-4 rounded-lg shadow mb-8">
                     <input
