@@ -74,7 +74,8 @@ const TaskManagementApp = () => {
 
     const handleUpdateTask = async (id, updatedTask) => {
         try {
-            await axios.patch(`/api/tasks/${id}`, updatedTask);
+
+            await axios.patch(`${import.meta.env.VITE_API_URL}/tasks/${id}`, updatedTask);
             const updatedTasks = tasks.map(task => (task._id === id ? { ...task, ...updatedTask } : task));
             setTasks(updatedTasks);
         } catch (error) {
@@ -82,40 +83,7 @@ const TaskManagementApp = () => {
         }
     };
 
-    const handleDeleteTask = async id => {
-        try {
-            await axios.delete(`/api/tasks/${id}`);
-            const updatedTasks = tasks.filter(task => task._id !== id);
-            setTasks(updatedTasks);
-        } catch (error) {
-            console.error('Error deleting task:', error);
-        }
-    };
-
-    const handleDragStart = (e, taskId) => {
-        e.dataTransfer.setData('taskId', taskId);
-    };
-
-    const handleDrop = async (e, targetCategory) => {
-        const taskId = e.dataTransfer.getData('taskId');
-        const task = tasks.find(t => t._id === taskId);
-        if (task.Category !== targetCategory) {
-            await handleUpdateTask(taskId, { Category: targetCategory });
-        }
-    };
-
-    const handleReorder = async (taskId, newIndex, category) => {
-        const updatedTasks = tasks.filter(t => t.Category === category).sort((a, b) => a.order - b.order);
-        const task = updatedTasks.find(t => t._id === taskId);
-        updatedTasks.splice(updatedTasks.indexOf(task), 1);
-        updatedTasks.splice(newIndex, 0, task);
-        const reorderedTasks = updatedTasks.map((t, index) => ({
-            ...t,
-            order: index
-        }));
-        await Promise.all(reorderedTasks.map(t => axios.patch(`/api/tasks/${t._id}`, { order: t.order })));
-        fetchTasks(); // Refresh tasks after reordering
-    };
+    
 
     return (
         <div className="min-h-screen bg-gray-100 p-4">
