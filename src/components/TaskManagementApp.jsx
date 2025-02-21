@@ -14,7 +14,8 @@ const TaskManagementApp = () => {
 
     const fetchTasks = async () => {
         try {
-            const response = await axios.get('/api/tasks');
+
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/tasks`);
             console.log('Fetched tasks:', response.data); // Debugging
             const data = Array.isArray(response.data) ? response.data : []; // Ensure data is an array
             setTasks(data);
