@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from 'react';
 import { IoMoonOutline, IoSunnyOutline } from 'react-icons/io5';
 import { Link } from 'react-router-dom';
 import userIcon from '../assets/user.png';
+import logo from '../assets/frame.png';
 import { AuthContext } from '../provider/AuthProvider';
 
 const Navbar = () => {
@@ -36,7 +37,9 @@ const Navbar = () => {
 
     return (
         <div className="navbar container mx-auto px-3 py-3">
-            <div className="navbar-start"></div>
+            <div className="navbar-start">
+                <img src={logo} alt="logo" className='w-14 rounded-md'/>
+            </div>
             <div className="navbar-end md:flex gap-3">
                 <div>
                     {user && user?.email ? (
