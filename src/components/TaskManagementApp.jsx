@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import React, { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
 const TaskManagementApp = () => {
@@ -126,17 +126,17 @@ const TaskManagementApp = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 p-4">
-            <h1 className="text-3xl font-bold text-center mb-8">Task Management</h1>
+        <div className="min-h-screen bg-gray-100 p-4 dark:bg-gray-800 dark:text-white">
+            <h1 className="text-4xl font-semibold text-center mb-10">Task Management</h1>
             <div className="max-w-4xl mx-auto">
                 {/* Add Task Form */}
-                <form onSubmit={handleAddTask} className="bg-white p-4 rounded-lg shadow mb-8">
+                <form onSubmit={handleAddTask} className="bg-white p-4 rounded-lg shadow mb-8 dark:bg-neutral dark:text-white ">
                     <input
                         type="text"
                         placeholder="Task Title"
                         value={newTask.Title}
                         onChange={e => setNewTask({ ...newTask, Title: e.target.value })}
-                        className="w-full p-2 mb-2 border rounded"
+                        className="w-full p-2 mb-2 border rounded dark:bg-gray-800 dark:text-white dark:border-gray-700"
                         maxLength={50}
                         required
                     />
@@ -144,15 +144,22 @@ const TaskManagementApp = () => {
                         placeholder="Task Description"
                         value={newTask.Description}
                         onChange={e => setNewTask({ ...newTask, Description: e.target.value })}
-                        className="w-full p-2 mb-2 border rounded"
+                        className="w-full p-2 mb-2 border rounded dark:bg-gray-800 dark:text-white dark:border-gray-700"
                         maxLength={200}
                     />
-                    <select value={newTask.Category} onChange={e => setNewTask({ ...newTask, Category: e.target.value })} className="w-full p-2 mb-2 border rounded" required>
+                    <select
+                        value={newTask.Category}
+                        onChange={e => setNewTask({ ...newTask, Category: e.target.value })}
+                        className="w-full p-2 mb-2 border rounded dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                        required>
                         <option value="To-Do">To-Do</option>
                         <option value="In Progress">In Progress</option>
                         <option value="Done">Done</option>
                     </select>
-                    <button type="submit" disabled={isLoading} className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-blue-300">
+                    <button
+                        type="submit"
+                        disabled={isLoading}
+                        className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:bg-blue-300 dark:bg-gray-900 dark:hover:bg-gray-800 dark:text-white transition">
                         {isLoading ? 'Adding...' : 'Add Task'}
                     </button>
                 </form>
@@ -160,14 +167,18 @@ const TaskManagementApp = () => {
                 {/* Task Columns */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {['To-Do', 'In Progress', 'Done'].map(category => (
-                        <div key={category} onDrop={e => handleDrop(e, category)} onDragOver={e => e.preventDefault()} className="bg-white p-4 rounded-lg shadow">
+                        <div key={category} onDrop={e => handleDrop(e, category)} onDragOver={e => e.preventDefault()} className="bg-white p-4 rounded-lg shadow dark:bg-neutral dark:text-white">
                             <h2 className="text-xl font-semibold mb-4">{category}</h2>
                             {Array.isArray(tasks) &&
                                 tasks
                                     .filter(task => task.Category === category)
                                     .sort((a, b) => a.order - b.order)
                                     .map((task, index) => (
-                                        <div key={task._id} draggable onDragStart={e => handleDragStart(e, task._id)} className="p-4 mb-4 border rounded-lg bg-gray-50">
+                                        <div
+                                            key={task._id}
+                                            draggable
+                                            onDragStart={e => handleDragStart(e, task._id)}
+                                            className="p-4 mb-4 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700">
                                             <h3 className="font-bold">{task.Title}</h3>
                                             <p className="text-sm text-gray-600">{task.Description}</p>
                                             <p className="text-xs text-gray-400">{new Date(task.TimeStamp).toLocaleString()}</p>
@@ -184,13 +195,12 @@ const TaskManagementApp = () => {
                                                 <button onClick={() => handleDeleteTask(task._id)} className="text-sm text-red-500 hover:text-red-700">
                                                     Delete
                                                 </button>
-                                                
                                                 {/* re-order btn */}
                                                 <button onClick={() => handleReorder(task._id, index - 1, category)} disabled={index === 0}>
-                                                    ⬆
+                                                    ⬆️
                                                 </button>
                                                 <button onClick={() => handleReorder(task._id, index + 1, category)} disabled={index === tasks.filter(t => t.Category === category).length - 1}>
-                                                    ⬇
+                                                    ⬇️
                                                 </button>
                                             </div>
                                         </div>

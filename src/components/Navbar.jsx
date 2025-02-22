@@ -1,15 +1,42 @@
-import { useContext } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { useContext, useEffect, useState } from 'react';
+import { IoMoonOutline, IoSunnyOutline } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
 import userIcon from '../assets/user.png';
 import { AuthContext } from '../provider/AuthProvider';
 
 const Navbar = () => {
     const { user, logOut } = useContext(AuthContext);
 
+    const [mode, setMode] = useState('light');
+
+    // Load theme from local storage on mount
+    useEffect(() => {
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme) {
+            setMode(storedTheme);
+            document.documentElement.classList.add(storedTheme);
+        }
+    }, []);
+
+    // Toggle Mode Function
+    const toggleMode = () => {
+        if (mode === 'light') {
+            setMode('dark');
+            localStorage.setItem('theme', 'dark');
+            document.documentElement.classList.add('dark');
+            document.documentElement.classList.remove('light');
+        } else {
+            setMode('light');
+            localStorage.setItem('theme', 'light');
+            document.documentElement.classList.add('light');
+            document.documentElement.classList.remove('dark');
+        }
+    };
+
 
     return (
         <div className="navbar container mx-auto px-3 py-3">
-            <div className='navbar-start'></div>
+            <div className="navbar-start"></div>
             <div className="navbar-end md:flex gap-3">
                 <div>
                     {user && user?.email ? (
@@ -42,6 +69,23 @@ const Navbar = () => {
                         </div>
                     )}
                 </div>
+            </div>
+
+            {/* DarkMode Light Mode  */}
+            <div className="ml-3 mr-3">
+                {mode === 'light' ? (
+                    <button onClick={toggleMode}>
+                        <span className="text-3xl text-yellow-500">
+                            <IoSunnyOutline />
+                        </span>
+                    </button>
+                ) : (
+                    <button onClick={toggleMode}>
+                        <span className="text-3xl text-gray-500">
+                            <IoMoonOutline />
+                        </span>
+                    </button>
+                )}
             </div>
         </div>
     );

@@ -2,7 +2,7 @@ import TaskManagementApp from "../components/TaskManagementApp";
 
 const Home = () => {
     return (
-        <div className="bg-gray-100 min-h-screen px-5 py-20">
+        <div className="bg-gray-100 min-h-screen px-5 py-20 dark:bg-gray-800 dark:text-white">
             <TaskManagementApp />
         </div>
     );
