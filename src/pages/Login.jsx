@@ -1,4 +1,3 @@
-
 import { GoogleAuthProvider, sendPasswordResetEmail, signInWithPopup } from 'firebase/auth';
 import { useContext, useRef, useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -65,31 +64,37 @@ const Login = () => {
     };
 
     return (
-        <div className="md:min-h-[calc(100vh-200px)] flex justify-center items-center">
-            <div className="card bg-base-100 w-full max-w-md shrink-0 shadow-2xl md:p-3 pt-4">
+        <div className="md:min-h-[calc(100vh-200px)] flex justify-center items-center dark:bg-gray-800 dark:text-white">
+            <div className="card bg-base-100 w-full max-w-md shrink-0 shadow-sm md:p-3 pt-4 dark:bg-gray-800 dark:text-white">
                 <h2 className="text-3xl font-semibold text-center text-brandPrimary pt-6">Login your account</h2>
                 <form onSubmit={handleSubmit} className="card-body">
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text text-base">Email</span>
+                            <span className="label-text text-base dark:text-white">Email</span>
                         </label>
-                        <input type="email" name="email" ref={emailRef} placeholder="Enter your email" className="input input-bordered bg-[#F3F3F3]" required />
+                        <input type="email" name="email" ref={emailRef} placeholder="Enter your email" className="input input-bordered bg-[#F3F3F3] dark:bg-neutral dark:text-white" required />
                     </div>
 
                     <div className="form-control relative">
                         <label className="label">
-                            <span className="label-text text-base">Password</span>
+                            <span className="label-text text-base dark:bg-neutral dark:text-white">Password</span>
                         </label>
 
-                        <input type={showPassword ? 'text' : 'password'} name="password" placeholder="Enter your password" className="input input-bordered bg-[#F3F3F3]" required />
-                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="btn btn-xs absolute right-3 text-lg top-12">
+                        <input
+                            type={showPassword ? 'text' : 'password'}
+                            name="password"
+                            placeholder="Enter your password"
+                            className="input input-bordered bg-[#F3F3F3] dark:bg-neutral dark:text-white"
+                            required
+                        />
+                        <button type="button" onClick={() => setShowPassword(!showPassword)} className="btn btn-xs absolute right-3 text-lg top-12 dark:bg-neutral dark:text-white">
                             {showPassword ? <FaEye /> : <FaEyeSlash />}
                         </button>
 
                         {error.login && <label className="label text-red-600 text-sm">{error.login}</label>}
 
                         <label onClick={handleForgetPassword} className="label">
-                            <Link to="#" className="label-text-alt link link-hover text-base">
+                            <Link to="#" className="label-text-alt link link-hover text-base dark:text-white">
                                 Forgot password?
                             </Link>
                         </label>
@@ -119,4 +124,3 @@ const Login = () => {
 };
 
 export default Login;
-

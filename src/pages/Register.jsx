@@ -105,64 +105,64 @@ const Register = () => {
     };
 
     return (
-        <div className="md:min-h-screen flex justify-center items-center mb-10">
-            <div className="card bg-base-100 w-full max-w-lg shrink-0 shadow-sm md:p-2">
+        <div className="md:min-h-screen flex justify-center items-center dark:bg-gray-800 dark:text-white pb-20">
+            <div className="card bg-base-100 w-full max-w-lg shrink-0 shadow-sm md:p-2 dark:bg-gray-800 dark:text-white">
                 <h2 className="text-3xl text-brandPrimary font-semibold text-center pt-10">Register your account</h2>
                 <form onSubmit={handleSubmit} className="card-body">
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text text-base">Your Name</span>
+                            <span className="label-text text-base dark:text-white">Your Name</span>
                         </label>
-                        <input type="text" name="name" placeholder="Enter your name" className="input input-bordered bg-[#F3F3F3]" required />
+                        <input type="text" name="name" placeholder="Enter your name" className="input input-bordered bg-[#F3F3F3] dark:bg-neutral dark:text-white" required />
                     </div>
                     {error.name && <label className="label text-sm text-rose-500">{error.name}</label>}
 
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text text-base">Photo URL</span>
+                            <span className="label-text text-base dark:text-white">Photo URL</span>
                         </label>
-                        <input type="text" name="photo" placeholder="Enter your photo URL" className="input input-bordered bg-[#F3F3F3]" required />
+                        <input type="text" name="photo" placeholder="Enter your photo URL" className="input input-bordered bg-[#F3F3F3] dark:bg-neutral dark:text-white" required />
                     </div>
 
                     <div className="form-control">
                         <label className="label">
-                            <span className="label-text text-base">Email</span>
+                            <span className="label-text text-base dark:text-white">Email</span>
                         </label>
-                        <input type="email" name="email" placeholder="Enter your email" className="input input-bordered bg-[#F3F3F3]" required />
+                        <input type="email" name="email" placeholder="Enter your email" className="input input-bordered bg-[#F3F3F3] dark:bg-neutral dark:text-white" required />
                     </div>
 
                     <div className="form-control relative">
                         <label className="label">
-                            <span className="label-text text-base">Password</span>
+                            <span className="label-text text-base dark:text-white">Password</span>
                         </label>
                         <input
                             type={showPassword ? 'text' : 'password'}
                             name="password"
                             placeholder="Enter your password"
-                            className="input input-bordered bg-[#F3F3F3]"
+                            className="input input-bordered bg-[#F3F3F3] dark:bg-neutral dark:text-white"
                             required
                             value={password}
                             onChange={e => setPassword(e.target.value)}
                         />
-                        <button type="button" onClick={handleShowPassword} className="btn btn-xs absolute right-3 text-lg top-12">
+                        <button type="button" onClick={handleShowPassword} className="btn btn-xs absolute right-3 text-lg top-12 dark:bg-neutral dark:text-white">
                             {showPassword ? <FaEye /> : <FaEyeSlash />}
                         </button>
                     </div>
 
                     <div className="form-control relative">
                         <label className="label">
-                            <span className="label-text text-base">Confirm Password</span>
+                            <span className="label-text text-base dark:text-white">Confirm Password</span>
                         </label>
                         <input
                             type={showConfirmPassword ? 'text' : 'password'}
                             name="confirmPassword"
                             placeholder="Confirm your password"
-                            className="input input-bordered bg-[#F3F3F3]"
+                            className="input input-bordered bg-[#F3F3F3] dark:bg-neutral dark:text-white"
                             required
                             value={confirmPassword}
                             onChange={e => setConfirmPassword(e.target.value)}
                         />
-                        <button type="button" onClick={handleShowConfirmPassword} className="btn btn-xs absolute right-3 text-lg top-12">
+                        <button type="button" onClick={handleShowConfirmPassword} className="btn btn-xs absolute right-3 text-lg top-12 dark:bg-neutral dark:text-white">
                             {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                         </button>
                     </div>

@@ -38,8 +38,27 @@ const Navbar = () => {
     return (
         <div className="navbar container mx-auto px-3 py-3">
             <div className="navbar-start">
-                <img src={logo} alt="logo" className='w-14 rounded-md'/>
+                <img src={logo} alt="logo" className="w-14 rounded-md" />
             </div>
+
+            {/* DarkMode Light Mode  */}
+            <div className="mr-2">
+                {mode === 'light' ? (
+                    <button onClick={toggleMode}>
+                        <span className="text-3xl text-yellow-500">
+                            <IoSunnyOutline />
+                        </span>
+                    </button>
+                ) : (
+                    <button onClick={toggleMode}>
+                        <span className="text-3xl text-gray-500">
+                            <IoMoonOutline />
+                        </span>
+                    </button>
+                )}
+            </div>
+
+            {/* login / logout functionality */}
             <div className="navbar-end md:flex gap-3">
                 <div>
                     {user && user?.email ? (
@@ -56,7 +75,7 @@ const Navbar = () => {
                     )}
                 </div>
 
-                <div className="hidden lg:flex">
+                <div className="lg:flex">
                     {user && user?.email ? (
                         <button onClick={logOut} className="btn bg-brandPrimary text-brandLight hover:text-brandPrimary font-bold">
                             Log out
@@ -72,23 +91,6 @@ const Navbar = () => {
                         </div>
                     )}
                 </div>
-            </div>
-
-            {/* DarkMode Light Mode  */}
-            <div className="ml-3 mr-3">
-                {mode === 'light' ? (
-                    <button onClick={toggleMode}>
-                        <span className="text-3xl text-yellow-500">
-                            <IoSunnyOutline />
-                        </span>
-                    </button>
-                ) : (
-                    <button onClick={toggleMode}>
-                        <span className="text-3xl text-gray-500">
-                            <IoMoonOutline />
-                        </span>
-                    </button>
-                )}
             </div>
         </div>
     );

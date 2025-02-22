@@ -244,10 +244,13 @@ const TaskManagementApp = () => {
                                                     Delete
                                                 </button>
                                                 {/* re-order btn */}
-                                                <button onClick={() => handleReorder(task._id, index - 1, category)} disabled={index === 0}>
+                                                <button className="ml-3" onClick={() => handleReorder(task._id, index - 1, category)} disabled={index === 0}>
                                                     ⬆️
                                                 </button>
-                                                <button onClick={() => handleReorder(task._id, index + 1, category)} disabled={index === tasks.filter(t => t.Category === category).length - 1}>
+                                                <button
+                                                    className="ml-3"
+                                                    onClick={() => handleReorder(task._id, index + 1, category)}
+                                                    disabled={index === tasks.filter(t => t.Category === category).length - 1}>
                                                     ⬇️
                                                 </button>
                                             </div>

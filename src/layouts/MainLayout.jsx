@@ -12,7 +12,7 @@ const MainLayout = () => {
                 <Navbar />
             </header>
 
-            <main className="bg-neutralSilver">
+            <main className="bg-neutralSilver dark:bg-gray-800 dark:text-white">
                 {/* Dynamic Section  */}
                 <div className="min-h-[calc(100vh-232px)]">
                     <Outlet />
