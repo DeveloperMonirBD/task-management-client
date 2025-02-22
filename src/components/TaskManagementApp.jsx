@@ -5,7 +5,8 @@ import Swal from 'sweetalert2';
 const TaskManagementApp = () => {
     const [tasks, setTasks] = useState([]);
     const [newTask, setNewTask] = useState({ Title: '', Description: '', Category: 'To-Do' });
-    const [isLoading, setIsLoading] = useState(false); // Loading state
+    const [isLoading, setIsLoading] = useState(false);
+    const [editingTask, setEditingTask] = useState(null); // Track the task being edited
 
     // Fetch tasks from the backend on component mount
     useEffect(() => {
@@ -15,8 +16,7 @@ const TaskManagementApp = () => {
     const fetchTasks = async () => {
         try {
             const response = await axios.get(`${import.meta.env.VITE_API_URL}/tasks`);
-            console.log('Fetched tasks:', response.data); // Debugging
-            const data = Array.isArray(response.data) ? response.data : []; // Ensure data is an array
+            const data = Array.isArray(response.data) ? response.data : [];
             setTasks(data);
         } catch (error) {
             console.error('Error fetching tasks:', error);
@@ -32,7 +32,7 @@ const TaskManagementApp = () => {
 
     const handleAddTask = async e => {
         e.preventDefault();
-        setIsLoading(true); // Start loading
+        setIsLoading(true);
 
         if (!newTask.Title.trim()) {
             Swal.fire({
@@ -42,8 +42,8 @@ const TaskManagementApp = () => {
                 showConfirmButton: false,
                 timer: 3000
             });
-            setIsLoading(false); // Stop loading
-            return; // Stop further execution
+            setIsLoading(false);
+            return;
         }
 
         try {
@@ -63,7 +63,7 @@ const TaskManagementApp = () => {
                     timer: 3000
                 });
                 setTasks([...tasks, { ...taskData, _id: response.data.insertedId }]);
-                setNewTask({ Title: '', Description: '', Category: 'To-Do' }); // Reset form
+                setNewTask({ Title: '', Description: '', Category: 'To-Do' });
             }
         } catch (error) {
             Swal.fire({
@@ -74,7 +74,7 @@ const TaskManagementApp = () => {
                 timer: 3000
             });
         } finally {
-            setIsLoading(false); // Stop loading
+            setIsLoading(false);
         }
     };
 
@@ -90,6 +90,7 @@ const TaskManagementApp = () => {
                 showConfirmButton: false,
                 timer: 3000
             });
+            setEditingTask(null); // Close the edit form
         } catch (error) {
             console.error('Error updating task:', error);
             Swal.fire({
@@ -154,7 +155,7 @@ const TaskManagementApp = () => {
         const categoryTasks = tasks.filter(t => t.Category === category);
         const task = categoryTasks.find(t => t._id === taskId);
 
-        if (!task) return; // Task not found
+        if (!task) return;
 
         categoryTasks.splice(categoryTasks.indexOf(task), 1);
         categoryTasks.splice(newIndex, 0, task);
@@ -226,34 +227,72 @@ const TaskManagementApp = () => {
                                             draggable
                                             onDragStart={e => handleDragStart(e, task._id)}
                                             className="p-4 mb-4 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700">
-                                            <h3 className="font-bold">{task.Title}</h3>
-                                            <p className="text-sm text-gray-600 mb-2">{task.Description}</p>
-                                            <p className="text-xs text-gray-400">{new Date(task.TimeStamp).toLocaleString()}</p>
-                                            <div className="mt-2 flex space-x-2">
-                                                <button
-                                                    onClick={() => {
-                                                        const newTitle = prompt('Edit Title', task.Title);
-                                                        if (newTitle !== null) {
-                                                            handleUpdateTask(task._id, { Title: newTitle });
-                                                        }
-                                                    }}
-                                                    className="text-sm text-blue-500 hover:text-blue-700">
-                                                    Edit
-                                                </button>
-                                                <button onClick={() => handleDeleteTask(task._id)} className="text-sm text-red-500 hover:text-red-700">
-                                                    Delete
-                                                </button>
-                                                {/* re-order btn */}
-                                                <button className="ml-3" onClick={() => handleReorder(task._id, index - 1, category)} disabled={index === 0}>
-                                                    ⬆️
-                                                </button>
-                                                <button
-                                                    className="ml-3"
-                                                    onClick={() => handleReorder(task._id, index + 1, category)}
-                                                    disabled={index === tasks.filter(t => t.Category === category).length - 1}>
-                                                    ⬇️
-                                                </button>
-                                            </div>
+                                            {editingTask === task._id ? (
+                                                // Edit Form
+                                                <form
+                                                    onSubmit={e => {
+                                                        e.preventDefault();
+                                                        handleUpdateTask(task._id, {
+                                                            Title: e.target.title.value,
+                                                            Description: e.target.description.value,
+                                                            Category: e.target.category.value
+                                                        });
+                                                    }}>
+                                                    <input
+                                                        type="text"
+                                                        name="title"
+                                                        defaultValue={task.Title}
+                                                        className="w-full p-2 mb-2 border rounded dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                                                        required
+                                                    />
+                                                    <textarea
+                                                        name="description"
+                                                        defaultValue={task.Description}
+                                                        className="w-full p-2 mb-2 border rounded dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                                                    />
+                                                    <select
+                                                        name="category"
+                                                        defaultValue={task.Category}
+                                                        className="w-full p-2 mb-2 border rounded dark:bg-gray-800 dark:text-white dark:border-gray-700"
+                                                        required>
+                                                        <option value="To-Do">To-Do</option>
+                                                        <option value="In Progress">In Progress</option>
+                                                        <option value="Done">Done</option>
+                                                    </select>
+                                                    <div className="flex space-x-2">
+                                                        <button type="submit" className="text-sm bg-green-500 text-white p-1 rounded hover:bg-green-600">
+                                                            Save
+                                                        </button>
+                                                        <button type="button" onClick={() => setEditingTask(null)} className="text-sm bg-gray-500 text-white p-1 rounded hover:bg-gray-600">
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            ) : (
+                                                // Task Details
+                                                <>
+                                                    <h3 className="font-bold">{task.Title}</h3>
+                                                    <p className="text-sm text-gray-600 mb-2">{task.Description}</p>
+                                                    <p className="text-xs text-gray-400">{new Date(task.TimeStamp).toLocaleString()}</p>
+                                                    <div className="mt-2 flex space-x-2">
+                                                        <button onClick={() => setEditingTask(task._id)} className="text-sm text-blue-500 hover:text-blue-700">
+                                                            Edit
+                                                        </button>
+                                                        <button onClick={() => handleDeleteTask(task._id)} className="text-sm text-red-500 hover:text-red-700">
+                                                            Delete
+                                                        </button>
+                                                        <button className="ml-3" onClick={() => handleReorder(task._id, index - 1, category)} disabled={index === 0}>
+                                                            ⬆️
+                                                        </button>
+                                                        <button
+                                                            className="ml-3"
+                                                            onClick={() => handleReorder(task._id, index + 1, category)}
+                                                            disabled={index === tasks.filter(t => t.Category === category).length - 1}>
+                                                            ⬇️
+                                                        </button>
+                                                    </div>
+                                                </>
+                                            )}
                                         </div>
                                     ))}
                         </div>

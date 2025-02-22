@@ -41,25 +41,27 @@ const Navbar = () => {
                 <img src={logo} alt="logo" className="w-14 rounded-md" />
             </div>
 
-            {/* DarkMode Light Mode  */}
-            <div>
-                {mode === 'light' ? (
-                    <button onClick={toggleMode}>
-                        <span className="text-3xl text-yellow-500">
-                            <IoSunnyOutline />
-                        </span>
-                    </button>
-                ) : (
-                    <button onClick={toggleMode}>
-                        <span className="text-3xl text-gray-500">
-                            <IoMoonOutline />
-                        </span>
-                    </button>
-                )}
-            </div>
-
             {/* login / logout functionality */}
             <div className="navbar-end md:flex gap-3">
+
+                {/* DarkMode Light Mode  */}
+                <div>
+                    {mode === 'light' ? (
+                        <button onClick={toggleMode}>
+                            <span className="text-3xl text-yellow-500">
+                                <IoSunnyOutline />
+                            </span>
+                        </button>
+                    ) : (
+                        <button onClick={toggleMode}>
+                            <span className="text-3xl text-gray-500">
+                                <IoMoonOutline />
+                            </span>
+                        </button>
+                    )}
+                </div>
+                
+                {/* user image  */}
                 <div>
                     {user && user?.email ? (
                         <div className="relative flex items-center gap-2 group">
