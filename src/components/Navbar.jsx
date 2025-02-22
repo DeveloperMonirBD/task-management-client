@@ -42,7 +42,7 @@ const Navbar = () => {
             </div>
 
             {/* DarkMode Light Mode  */}
-            <div className="mr-2">
+            <div>
                 {mode === 'light' ? (
                     <button onClick={toggleMode}>
                         <span className="text-3xl text-yellow-500">
