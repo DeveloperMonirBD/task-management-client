@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
 const TaskManagementApp = () => {
@@ -20,6 +20,13 @@ const TaskManagementApp = () => {
             setTasks(data);
         } catch (error) {
             console.error('Error fetching tasks:', error);
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error fetching tasks!',
+                showConfirmButton: false,
+                timer: 3000
+            });
         }
     };
 
@@ -76,18 +83,58 @@ const TaskManagementApp = () => {
             await axios.patch(`${import.meta.env.VITE_API_URL}/tasks/${id}`, updatedTask);
             const updatedTasks = tasks.map(task => (task._id === id ? { ...task, ...updatedTask } : task));
             setTasks(updatedTasks);
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'Task updated successfully!',
+                showConfirmButton: false,
+                timer: 3000
+            });
         } catch (error) {
             console.error('Error updating task:', error);
+            Swal.fire({
+                position: 'center',
+                icon: 'error',
+                title: 'Error updating task!',
+                showConfirmButton: false,
+                timer: 3000
+            });
         }
     };
 
     const handleDeleteTask = async id => {
-        try {
-            await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${id}`);
-            const updatedTasks = tasks.filter(task => task._id !== id);
-            setTasks(updatedTasks);
-        } catch (error) {
-            console.error('Error deleting task:', error);
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await axios.delete(`${import.meta.env.VITE_API_URL}/tasks/${id}`);
+                const updatedTasks = tasks.filter(task => task._id !== id);
+                setTasks(updatedTasks);
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Task deleted successfully!',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            } catch (error) {
+                console.error('Error deleting task:', error);
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Error deleting task!',
+                    showConfirmButton: false,
+                    timer: 3000
+                });
+            }
         }
     };
 
@@ -180,15 +227,16 @@ const TaskManagementApp = () => {
                                             onDragStart={e => handleDragStart(e, task._id)}
                                             className="p-4 mb-4 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:text-white dark:border-gray-700">
                                             <h3 className="font-bold">{task.Title}</h3>
-                                            <p className="text-sm text-gray-600">{task.Description}</p>
+                                            <p className="text-sm text-gray-600 mb-2">{task.Description}</p>
                                             <p className="text-xs text-gray-400">{new Date(task.TimeStamp).toLocaleString()}</p>
                                             <div className="mt-2 flex space-x-2">
                                                 <button
-                                                    onClick={() =>
-                                                        handleUpdateTask(task._id, {
-                                                            Title: prompt('Edit Title', task.Title)
-                                                        })
-                                                    }
+                                                    onClick={() => {
+                                                        const newTitle = prompt('Edit Title', task.Title);
+                                                        if (newTitle !== null) {
+                                                            handleUpdateTask(task._id, { Title: newTitle });
+                                                        }
+                                                    }}
                                                     className="text-sm text-blue-500 hover:text-blue-700">
                                                     Edit
                                                 </button>
