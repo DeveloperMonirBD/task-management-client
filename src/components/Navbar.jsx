@@ -42,7 +42,7 @@ const Navbar = () => {
             </div>
 
             {/* login / logout functionality */}
-            <div className="navbar-end md:flex gap-3">
+            <div className="navbar-end md:flex gap-2">
 
                 {/* DarkMode Light Mode  */}
                 <div>
@@ -79,8 +79,8 @@ const Navbar = () => {
 
                 <div className="lg:flex">
                     {user && user?.email ? (
-                        <button onClick={logOut} className="btn bg-brandPrimary text-brandLight hover:text-brandPrimary font-bold">
-                            Log out
+                        <button onClick={logOut} className="btn bg-brandPrimary text-brandLight hover:text-brandPrimary font-semibold">
+                        Log Out
                         </button>
                     ) : (
                         <div className="flex items-center gap-2">
